@@ -6,8 +6,9 @@ from datetime import datetime
 from functools import lru_cache
 
 # ---------------------------------------------------------
-# BURAYA KENDİ GEMINI API ANAHTARINIZI YAZIN:
-GEMINI_API_KEY = "AIzaSyBW3LZ4jq1wpkqXZ27ekAaQ6-hMDQo0jIY"
+
+GEMINI_API_KEY = "****************************"
+
 # ---------------------------------------------------------
 
 app = FastAPI(title="WeatherWise API")
@@ -19,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# FAZ 2.1: Karar Motoru
+#  Karar Motoru
 def generate_weather_tags(current_temp, feels_like, wind_speed, precip_prob, humidity, uv_index, cloud_cover, evening_temp):
     tags = []
     if precip_prob > 50:
@@ -42,10 +43,9 @@ def generate_weather_tags(current_temp, feels_like, wind_speed, precip_prob, hum
     return " ".join(tags)
 
 # FAZ 2.2: REST API (Curl) ile Gemini Bağlantısı
-# FAZ 2.2: REST API (Curl) ile Gemini Bağlantısı
 @lru_cache(maxsize=32)
 def rewrite_with_ai(raw_tags):
-    # Eski modeller silindiği için en güncel 'gemini-2.5-flash' modeline geçiş yaptık!
+    
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
     
     prompt = f"Sen WEATHERWISE adında, genç ve enerjik bir hava durumu asistanısın. Sana verilen hava durumu tavsiyelerini, sosyal medyada paylaşılacak 1 veya 2 cümlelik, akıcı, arkadaşça bir 'Story' metnine dönüştür. Tırnak işareti kullanma. Ham tavsiyeler: {raw_tags}"
@@ -90,7 +90,7 @@ def generate_story(lat: float = 40.18, lon: float = 29.06):
         'uv': data['hourly']['uv_index']
     })
     
-   # df.iloc[0] yerine bilgisayarın şu anki saatini bulup o indeksi çekiyoruz!
+   
     su_anki_saat = datetime.now().hour
     current_data = df.iloc[su_anki_saat]
     
@@ -105,7 +105,7 @@ def generate_story(lat: float = 40.18, lon: float = 29.06):
     
     humanized_story = rewrite_with_ai(raw_advice)
     
-   # ... (önceki kodlar aynı kalıyor)
+  
 
     # Hava durumuna göre bir 'mood' (mod) belirliyoruz
     weather_mood = "clear" # varsayılan
